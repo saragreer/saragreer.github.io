@@ -100,7 +100,6 @@
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 15px;
-            cursor: move;
             transition: all 0.3s ease;
             position: relative;
         }
@@ -120,6 +119,34 @@
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .drag-handle {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: move;
+            color: #666;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            user-select: none;
+            transition: all 0.2s;
+            order: -1;
+        }
+
+        .drag-handle:hover {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .drag-handle:active {
+            background: #dee2e6;
         }
 
         .destination {
@@ -185,18 +212,41 @@
             border-top: 1px solid #e9ecef;
         }
 
-        .nearby-header {
+        .nearby-toggle {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 5px 0;
+            user-select: none;
         }
 
-        .nearby-header h4 {
+        .nearby-toggle h4 {
             color: #666;
             font-size: 0.9em;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        .nearby-toggle::after {
+            content: '▼';
+            font-size: 12px;
+            color: #999;
+            transition: transform 0.2s;
+        }
+
+        .nearby-toggle.collapsed::after {
+            transform: rotate(-90deg);
+        }
+
+        .nearby-content {
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .nearby-content.collapsed {
+            display: none;
         }
 
         .refresh-nearby {
@@ -436,8 +486,9 @@
             }
 
             container.innerHTML = items.map(item => `
-                <div class="item" draggable="true" data-id="${item.id}">
+                <div class="item" data-id="${item.id}">
                     <div class="item-header">
+                        <div class="drag-handle" draggable="true" title="Drag to reorder">⋮⋮</div>
                         <a class="destination" href="#" onclick="openInMaps('${item.destination}'); return false;">
                             ${item.destination}
                         </a>
@@ -460,17 +511,21 @@
                         
                         <div class="notes">
                             <textarea placeholder="Notes (optional)" 
-                                      onchange="updateItem('${item.id}', 'notes', this.value)">${item.notes}</textarea>
+                                      onchange="            updateItem('${item.id}', 'notes', this.value)">${item.notes}</textarea>
                         </div>
                     </div>
                     
                     <div class="nearby-section">
-                        <div class="nearby-header">
+                        <div class="nearby-toggle collapsed" onclick="toggleNearby('${item.id}')">
                             <h4>Nearby Places of Interest</h4>
-                            <button class="refresh-nearby" onclick="refreshNearbyPlaces('${item.id}')">
-                                Refresh
-                            </button>
                         </div>
+                        
+                        <div class="nearby-content collapsed" id="nearby-${item.id}">
+                            <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                                <button class="refresh-nearby" onclick="refreshNearbyPlaces('${item.id}')">
+                                    Refresh
+                                </button>
+                            </div>
                         
                         <div class="nearby-places">
                             <div class="nearby-category">
@@ -498,17 +553,27 @@
             addDragListeners();
         }
 
+        function toggleNearby(id) {
+            const toggle = document.querySelector(`[onclick="toggleNearby('${id}')"]`);
+            const content = document.getElementById(`nearby-${id}`);
+            
+            toggle.classList.toggle('collapsed');
+            content.classList.toggle('collapsed');
+        }
+
         function addDragListeners() {
             const itemElements = document.querySelectorAll('.item');
             
             itemElements.forEach(item => {
-                item.addEventListener('dragstart', (e) => {
+                const dragHandle = item.querySelector('.drag-handle');
+                
+                dragHandle.addEventListener('dragstart', (e) => {
                     draggedItem = item;
                     item.classList.add('dragging');
                     e.dataTransfer.effectAllowed = 'move';
                 });
 
-                item.addEventListener('dragend', (e) => {
+                dragHandle.addEventListener('dragend', (e) => {
                     item.classList.remove('dragging');
                     draggedItem = null;
                 });
