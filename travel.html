@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Itinerary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .controls {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .map-preference {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .map-preference label {
+            font-weight: 500;
+        }
+
+        select, input, button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .email-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-left: auto;
+            font-size: 12px;
+            color: #1565c0;
+        }
+
+        .itinerary {
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        .item {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: move;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .item:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .destination {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            text-decoration: none;
+            flex-grow: 1;
+        }
+
+        .destination:hover {
+            color: #667eea;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .time-fields {
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-fields input {
+            flex: 1;
+        }
+
+        .notes {
+            grid-column: 1 / -1;
+        }
+
+        .notes textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+
+        .nearby-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .nearby-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .nearby-header h4 {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .refresh-nearby {
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .nearby-places {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .nearby-category h5 {
+            font-size: 0.85em;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .nearby-list {
+            list-style: none;
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .nearby-list li {
+            padding: 2px 0;
+            cursor: pointer;
+        }
+
+        .nearby-list li:hover {
+            color: #667eea;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 60px 20px;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .drag-over {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .add-item-form {
+            background: #f8f9fa;
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .form-row input {
+            flex: 1;
+        }
+
+        @media (max-width: 600px) {
+            .item-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .nearby-places {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✈️ Travel Itinerary</h1>
+            <p>Drag and drop to reorder your travel plans</p>
+        </div>
+
+        <div class="controls">
+            <div class="map-preference">
+                <label for="mapProvider">Maps:</label>
+                <select id="mapProvider">
+                    <option value="google">Google Maps</option>
+                    <option value="apple">Apple Maps</option>
+                </select>
+            </div>
+            
+
+        </div>
+
+        <div class="itinerary">
+            <div class="add-item-form">
+                <div class="form-row">
+                    <input type="text" id="newDestination" placeholder="Destination name" />
+                    <input type="date" id="newDate" />
+                    <button class="btn-primary" onclick="addItem()">Add Item</button>
+                </div>
+            </div>
+
+            <div id="itemsList"></div>
+        </div>
+    </div>
+
+    <script>
+        let items = JSON.parse(localStorage.getItem('travelItems')) || [];
+        let draggedItem = null;
+
+        // Sample nearby places data
+        const sampleNearbyPlaces = {
+            food: [
+                "Local Bistro", "Street Food Market", "Rooftop Restaurant", 
+                "Coffee House", "Traditional Eatery"
+            ],
+            attractions: [
+                "Historic Landmark", "Art Gallery", "Hidden Garden", 
+                "Local Museum", "Scenic Viewpoint"
+            ]
+        };
+
+        function saveItems() {
+            localStorage.setItem('travelItems', JSON.stringify(items));
+        }
+
+        function generateId() {
+            return '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function addItem(destination = '', date = '', startTime = '', endTime = '', notes = '') {
+            const destInput = document.getElementById('newDestination');
+            const dateInput = document.getElementById('newDate');
+            
+            if (!destination) destination = destInput.value.trim();
+            if (!date) date = dateInput.value;
+            
+            if (!destination) {
+                alert('Please enter a destination name');
+                return;
+            }
+
+            const newItem = {
+                id: generateId(),
+                destination,
+                date,
+                startTime,
+                endTime,
+                notes,
+                nearbyPlaces: generateNearbyPlaces()
+            };
+
+            items.push(newItem);
+            saveItems();
+            renderItems();
+            
+            // Clear form
+            destInput.value = '';
+            dateInput.value = '';
+        }
+
+        function deleteItem(id) {
+            items = items.filter(item => item.id !== id);
+            saveItems();
+            renderItems();
+        }
+
+        function updateItem(id, field, value) {
+            const item = items.find(item => item.id === id);
+            if (item) {
+                item[field] = value;
+                saveItems();
+            }
+        }
+
+        function generateNearbyPlaces() {
+            const food = sampleNearbyPlaces.food
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 3);
+            const attractions = sampleNearbyPlaces.attractions
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 3);
+            
+            return { food, attractions };
+        }
+
+        function refreshNearbyPlaces(id) {
+            const item = items.find(item => item.id === id);
+            if (item) {
+                item.nearbyPlaces = generateNearbyPlaces();
+                saveItems();
+                renderItems();
+            }
+        }
+
+        function openInMaps(destination) {
+            const mapProvider = document.getElementById('mapProvider').value;
+            const encodedDestination = encodeURIComponent(destination);
+            
+            let url;
+            if (mapProvider === 'apple') {
+                url = `https://maps.apple.com/?q=${encodedDestination}`;
+            } else {
+                url = `https://www.google.com/maps/search/${encodedDestination}`;
+            }
+            
+            window.open(url, '_blank');
+        }
+
+        function renderItems() {
+            const container = document.getElementById('itemsList');
+            
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No travel plans yet</h3>
+                        <p>Add your first destination above to get started</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = items.map(item => `
+                <div class="item" draggable="true" data-id="${item.id}">
+                    <div class="item-header">
+                        <a class="destination" href="#" onclick="openInMaps('${item.destination}'); return false;">
+                            ${item.destination}
+                        </a>
+                        <button class="delete-btn" onclick="deleteItem('${item.id}')" title="Delete item">×</button>
+                    </div>
+                    
+                    <div class="item-details">
+                        <div>
+                            <label>Date:</label>
+                            <input type="date" value="${item.date}" 
+                                   onchange="updateItem('${item.id}', 'date', this.value)" />
+                        </div>
+                        
+                        <div class="time-fields">
+                            <input type="time" value="${item.startTime}" placeholder="Start time"
+                                   onchange="updateItem('${item.id}', 'startTime', this.value)" />
+                            <input type="time" value="${item.endTime}" placeholder="End time"
+                                   onchange="updateItem('${item.id}', 'endTime', this.value)" />
+                        </div>
+                        
+                        <div class="notes">
+                            <textarea placeholder="Notes (optional)" 
+                                      onchange="updateItem('${item.id}', 'notes', this.value)">${item.notes}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="nearby-section">
+                        <div class="nearby-header">
+                            <h4>Nearby Places of Interest</h4>
+                            <button class="refresh-nearby" onclick="refreshNearbyPlaces('${item.id}')">
+                                Refresh
+                            </button>
+                        </div>
+                        
+                        <div class="nearby-places">
+                            <div class="nearby-category">
+                                <h5>🍽️ Food & Dining</h5>
+                                <ul class="nearby-list">
+                                    ${item.nearbyPlaces.food.map(place => 
+                                        `<li onclick="openInMaps('${place} near ${item.destination}')">${place}</li>`
+                                    ).join('')}
+                                </ul>
+                            </div>
+                            
+                            <div class="nearby-category">
+                                <h5>🎯 Attractions</h5>
+                                <ul class="nearby-list">
+                                    ${item.nearbyPlaces.attractions.map(place => 
+                                        `<li onclick="openInMaps('${place} near ${item.destination}')">${place}</li>`
+                                    ).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            addDragListeners();
+        }
+
+        function addDragListeners() {
+            const itemElements = document.querySelectorAll('.item');
+            
+            itemElements.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    draggedItem = item;
+                    item.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                item.addEventListener('dragend', (e) => {
+                    item.classList.remove('dragging');
+                    draggedItem = null;
+                });
+
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    
+                    const afterElement = getDragAfterElement(document.getElementById('itemsList'), e.clientY);
+                    if (afterElement == null) {
+                        document.getElementById('itemsList').appendChild(draggedItem);
+                    } else {
+                        document.getElementById('itemsList').insertBefore(draggedItem, afterElement);
+                    }
+                });
+
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    updateItemsOrder();
+                });
+            });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.item:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function updateItemsOrder() {
+            const itemElements = document.querySelectorAll('.item');
+            const newOrder = Array.from(itemElements).map(el => el.dataset.id);
+            
+            items = newOrder.map(id => items.find(item => item.id === id));
+            saveItems();
+        }
+
+        // Email integration simulation
+        function simulateEmailProcessing(emailContent) {
+            // This would be replaced with actual email processing logic
+            const patterns = {
+                flight: /flight.*?(\w+\s+\d{1,2},?\s+\d{4})/i,
+                hotel: /hotel.*?(\w+\s+\d{1,2},?\s+\d{4})/i,
+                destination: /to\s+([A-Za-z\s,]+)/i
+            };
+            
+            // Extract information and add item
+            // This is a placeholder for the actual email parsing logic
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            renderItems();
+            
+            // Set default date to today
+            document.getElementById('newDate').value = new Date().toISOString().split('T')[0];
+            
+            // Allow Enter key to add items
+            document.getElementById('newDestination').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addItem();
+                }
+            });
+        });
+
+        // Sample data for demo (remove this section for a clean start)
+        if (items.length === 0) {
+            items = [
+                {
+                    id: generateId(),
+                    destination: "Eiffel Tower, Paris",
+                    date: "2025-06-15",
+                    startTime: "09:00",
+                    endTime: "11:00",
+                    notes: "Buy tickets in advance. Best photos from Trocadéro.",
+                    nearbyPlaces: generateNearbyPlaces()
+                },
+                {
+                    id: generateId(),
+                    destination: "Louvre Museum, Paris",
+                    date: "2025-06-15",
+                    startTime: "14:00",
+                    endTime: "17:00",
+                    notes: "Focus on Mona Lisa and Venus de Milo. Audio guide recommended.",
+                    nearbyPlaces: generateNearbyPlaces()
+                }
+            ];
+            saveItems();
+        }
+    </script>
+</body>
+</html>
