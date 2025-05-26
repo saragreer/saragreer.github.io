@@ -138,6 +138,9 @@
             user-select: none;
             transition: all 0.2s;
             order: -1;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: none;
         }
 
         .drag-handle:hover {
@@ -147,6 +150,26 @@
 
         .drag-handle:active {
             background: #dee2e6;
+        }
+
+        .item.mobile-dragging {
+            opacity: 0.7;
+            transform: scale(1.05);
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .drag-placeholder {
+            border: 2px dashed #667eea;
+            background: #f8f9ff;
+            height: 60px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            font-weight: 500;
         }
 
         .destination {
@@ -566,7 +589,12 @@
             
             itemElements.forEach(item => {
                 const dragHandle = item.querySelector('.drag-handle');
+                let touchStartY = 0;
+                let touchStartX = 0;
+                let isDragging = false;
+                let placeholder = null;
                 
+                // Desktop drag and drop
                 dragHandle.addEventListener('dragstart', (e) => {
                     draggedItem = item;
                     item.classList.add('dragging');
@@ -593,6 +621,88 @@
                 item.addEventListener('drop', (e) => {
                     e.preventDefault();
                     updateItemsOrder();
+                });
+
+                // Mobile touch events
+                dragHandle.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    touchStartY = e.touches[0].clientY;
+                    touchStartX = e.touches[0].clientX;
+                    
+                    // Haptic feedback if supported
+                    if (navigator.vibrate) {
+                        navigator.vibrate(50);
+                    }
+                    
+                    setTimeout(() => {
+                        if (!isDragging) {
+                            isDragging = true;
+                            item.classList.add('mobile-dragging');
+                            
+                            // Create placeholder
+                            placeholder = document.createElement('div');
+                            placeholder.className = 'drag-placeholder';
+                            placeholder.textContent = 'Drop here';
+                            item.parentNode.insertBefore(placeholder, item.nextSibling);
+                        }
+                    }, 150);
+                }, { passive: false });
+
+                dragHandle.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const deltaY = touch.clientY - touchStartY;
+                    
+                    // Move the item visually
+                    item.style.transform = `translateY(${deltaY}px)`;
+                    
+                    // Find the element under the touch point
+                    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const targetItem = elementBelow?.closest('.item');
+                    
+                    if (targetItem && targetItem !== item && targetItem !== placeholder) {
+                        const rect = targetItem.getBoundingClientRect();
+                        const insertBefore = touch.clientY < rect.top + rect.height / 2;
+                        
+                        if (insertBefore) {
+                            targetItem.parentNode.insertBefore(placeholder, targetItem);
+                        } else {
+                            targetItem.parentNode.insertBefore(placeholder, targetItem.nextSibling);
+                        }
+                    }
+                }, { passive: false });
+
+                dragHandle.addEventListener('touchend', (e) => {
+                    if (!isDragging) return;
+                    
+                    e.preventDefault();
+                    isDragging = false;
+                    
+                    // Reset visual state
+                    item.classList.remove('mobile-dragging');
+                    item.style.transform = '';
+                    
+                    // Insert item at placeholder position
+                    if (placeholder && placeholder.parentNode) {
+                        placeholder.parentNode.insertBefore(item, placeholder);
+                        placeholder.remove();
+                        updateItemsOrder();
+                    }
+                    
+                    placeholder = null;
+                }, { passive: false });
+
+                // Cancel drag on touch cancel
+                dragHandle.addEventListener('touchcancel', (e) => {
+                    isDragging = false;
+                    item.classList.remove('mobile-dragging');
+                    item.style.transform = '';
+                    if (placeholder) {
+                        placeholder.remove();
+                        placeholder = null;
+                    }
                 });
             });
         }
