@@ -1,0 +1,12 @@
+# Documentation (private)
+SETUP.md
+QUICK-START.md
+
+# Jekyll
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# OS files
+.DS_Store

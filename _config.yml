@@ -1,1 +1,41 @@
-theme: jekyll-theme-cayman
+title: saragreer.com
+description: Sara Greer's personal website
+url: "https://saragreer.com"
+
+# Theme
+theme: minima
+
+# Build settings
+markdown: kramdown
+permalink: /notes/:year/:month/:day/:title/
+
+# Minima settings
+minima:
+  skin: classic
+
+# Header navigation
+header_pages:
+  - index.html
+  - notes/index.html
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /notes/:year/:month/:day/:title/
+
+# Default layouts
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+
+# Exclude files from processing
+exclude:
+  - README.md
+  - .github/
+  - scripts/
+  - Gemfile
+  - Gemfile.lock

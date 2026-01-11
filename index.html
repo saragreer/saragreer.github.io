@@ -1,46 +1,33 @@
-<html>
+---
+layout: home
+title: Home
+---
 
-<head>
-  <style>
-    @font-face {
-      font-family: 'NerettoSansRound';
-      src: url('NerettoSans-Round.eot');
-      /* IE9 Compat Modes */
-      src: url('NerettoSans-Round.eot?#iefix') format('embedded-opentype'),
-        /* IE6-IE8 */
-        url('NerettoSans-Round.woff') format('woff'),
-        /* Modern Browsers */
-        url('NerettoSans-Round.ttf') format('truetype'),
-        /* Safari, Android, iOS */
-        url('NerettoSans-Round.svg#NerettoSans-Round') format('svg');
-      /* Legacy iOS */
-      font-style: normal;
-      font-weight: normal;
-      text-rendering: optimizeLegibility;
-    }
-    
-    body {
-      font-family: 'Arial', Fallback, sans-serif;
-    }
-    h1, h2 {
-      font-family: 'NerettoSansRound', Fallback, sans-serif;
-    }
-  </style>
-  <title>saragreer.com</title>
-</head>
+<h1>Hello!</h1>
+<p>This is the Sara Greer who lives in South Texas, <a href="https://www.linkedin.com/in/saramgreer/" target="_blank">works in IT</a>, and is currently hiding from coronavirus with her husband, 2 dogs, and a cat. After several years of waiting for the domain to become available, I bought saragreer.com in May 2020. And here it sits while I decide what to do with it.</p>
 
-<body>
-  <h1>Hello!</h1>
-  <p>This is the Sara Greer who lives in South Texas, <a href="https://www.linkedin.com/in/saramgreer/" target="_blank">works in IT</a>, and is currently hiding from coronavirus with her
-    husband, 2 dogs, and a cat. After several years of waiting for the domain to become available, I bought saragreer.com in May 2020. And here it
-    sits while I decide what to do with it.</p>
-    <h2>So far I've:</h2>
-    <ul>
-      <li>Bought the domain!</li>
-      <li>Hosted from a GitHub repository using <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>. It's free!</li>
-      <li>Managed my custom domain with the help of a <a href="https://www.cloudflare.com/plans/" target="_blank">free Cloudflare account</a>. I'm going to be honest, it made a little sense while I was setting it up, but now I couldn't do it again without <a href="https://www.codementor.io/@landonpatmore/how-to-setup-a-static-website-using-github-pages-and-cloudflare-with-your-own-domain-name-jb99nbuoe" target="_blank">this how-to</a>.</li>
-      <li>Wrote this quick and dirty intro, and threw a custom font up for a little pizzazz. I've been collecting <a href="https://creativemarket.com/free-goods" target="_blank">Creative Market freebies</a> for years, and have built up quite the cache of font faces. This one is called <a href="https://creativemarket.com/valeriodelledera/477053-Neretto-Sans-Font" target="_blank">Neretto Sans</a>.</li>
-    </ul>
-</body>
+<h2>So far I've:</h2>
+<ul>
+  <li>Bought the domain!</li>
+  <li>Hosted from a GitHub repository using <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>. It's free!</li>
+  <li>Managed my custom domain with the help of a <a href="https://www.cloudflare.com/plans/" target="_blank">free Cloudflare account</a>. I'm going to be honest, it made a little sense while I was setting it up, but now I couldn't do it again without <a href="https://www.codementor.io/@landonpatmore/how-to-setup-a-static-website-using-github-pages-and-cloudflare-with-your-own-domain-name-jb99nbuoe" target="_blank">this how-to</a>.</li>
+  <li>Wrote this quick and dirty intro, and threw a custom font up for a little pizzazz. I've been collecting <a href="https://creativemarket.com/free-goods" target="_blank">Creative Market freebies</a> for years, and have built up quite the cache of font faces. This one is called <a href="https://creativemarket.com/valeriodelledera/477053-Neretto-Sans-Font" target="_blank">Neretto Sans</a>.</li>
+  <li>Set up an email-to-post system so I can quickly share notes and links!</li>
+</ul>
 
-</html>
+{% if site.posts.size > 0 %}
+  <h2>Recent Notes</h2>
+  <ul class="post-list">
+    {% for post in site.posts limit:3 %}
+      <li>
+        <h3 class="post-title">
+          <a href="{{ post.url }}">{{ post.title }}</a>
+        </h3>
+        <div class="post-meta">
+          {{ post.date | date: "%B %d, %Y" }}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+  <p><a href="/notes/">View all notes →</a></p>
+{% endif %}
