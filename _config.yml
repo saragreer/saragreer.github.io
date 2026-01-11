@@ -1,6 +1,7 @@
 title: saragreer.com
 description: Sara Greer's personal website
 url: "https://saragreer.com"
+lang: en
 
 # Theme
 theme: minima
