@@ -16,6 +16,7 @@ import sys
 # Configuration from environment variables
 GMAIL_USER = os.environ.get('GMAIL_USER')
 GMAIL_APP_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD')
+ALLOWED_SENDERS = os.environ.get('ALLOWED_SENDERS', '').split(',')  # Comma-separated list
 IMAP_SERVER = 'imap.gmail.com'
 IMAP_PORT = 993
 
@@ -144,6 +145,15 @@ def process_emails():
         print("Error: GMAIL_USER and GMAIL_APP_PASSWORD environment variables must be set")
         sys.exit(1)
 
+    if not ALLOWED_SENDERS or ALLOWED_SENDERS == ['']:
+        print("Error: ALLOWED_SENDERS environment variable must be set")
+        print("This should be a comma-separated list of email addresses allowed to create posts")
+        sys.exit(1)
+
+    # Clean up allowed senders list
+    allowed_senders = [sender.strip().lower() for sender in ALLOWED_SENDERS if sender.strip()]
+    print(f"Allowed senders: {', '.join(allowed_senders)}")
+
     # Ensure posts directory exists
     os.makedirs(POSTS_DIR, exist_ok=True)
 
@@ -186,6 +196,20 @@ def process_emails():
                 # Parse the email
                 raw_email = msg_data[0][1]
                 msg = email.message_from_bytes(raw_email)
+
+                # Check sender
+                from_header = decode_email_header(msg['From'])
+                # Extract email address from "Name <email@domain.com>" format
+                from_match = re.search(r'<(.+?)>', from_header)
+                sender_email = from_match.group(1).lower() if from_match else from_header.lower()
+
+                if sender_email not in allowed_senders:
+                    print(f"Skipping email from unauthorized sender: {sender_email}")
+                    # Mark as read so we don't keep checking it
+                    mail.store(email_id, '+FLAGS', '\\Seen')
+                    continue
+
+                print(f"Processing email from authorized sender: {sender_email}")
 
                 # Get subject
                 subject = decode_email_header(msg['Subject'])
