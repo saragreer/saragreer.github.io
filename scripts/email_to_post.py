@@ -2,7 +2,7 @@
 """
 Email to Jekyll Post Converter
 Connects to Gmail via IMAP, fetches unread emails, and creates Jekyll posts.
-Uses Gemini AI for auto-tagging and link summarization.
+Uses Claude AI for auto-tagging and link summarization.
 """
 
 import imaplib
@@ -16,13 +16,13 @@ from datetime import datetime
 import html2text
 import sys
 import trafilatura
-from google import genai
+import anthropic
 
 # Configuration from environment variables
 GMAIL_USER = os.environ.get('GMAIL_USER')
 GMAIL_APP_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD')
 ALLOWED_SENDERS = os.environ.get('ALLOWED_SENDERS', '').split(',')
-GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY')
 IMAP_SERVER = 'imap.gmail.com'
 IMAP_PORT = 993
 
@@ -130,15 +130,15 @@ def fetch_page_text(url):
 
 def enhance_with_ai(subject, body_text, fetch_url=None):
     """
-    Use Gemini to generate tags and (for link posts) a short summary.
+    Use Claude to generate tags and (for link posts) a short summary.
     Returns (tags_list, summary_str). Both are empty/None on failure.
     """
-    if not GEMINI_API_KEY:
-        print("GEMINI_API_KEY not set — skipping AI enhancement")
+    if not ANTHROPIC_API_KEY:
+        print("ANTHROPIC_API_KEY not set — skipping AI enhancement")
         return [], None
 
     try:
-        client = genai.Client(api_key=GEMINI_API_KEY)
+        client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
         page_content = None
         if fetch_url:
@@ -172,11 +172,12 @@ Respond ONLY with valid JSON, no other text:
 
 Rules for tags: 2-4 tags, lowercase, hyphenated if multi-word (e.g. "machine-learning", "open-source"). Pick the most specific relevant categories."""
 
-        response = client.models.generate_content(
-            model='gemini-1.5-flash',
-            contents=prompt
+        response = client.messages.create(
+            model='claude-haiku-4-5',
+            max_tokens=1024,
+            messages=[{"role": "user", "content": prompt}]
         )
-        raw = response.text.strip()
+        raw = response.content[0].text.strip()
 
         # Strip markdown code fences if present
         raw = re.sub(r'^```(?:json)?\s*', '', raw)
