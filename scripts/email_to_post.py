@@ -340,8 +340,10 @@ def process_emails():
                 body_raw = body.strip()
                 fetch_url = None
 
-                if re.match(r'^https?://\S+$', body_raw):
-                    fetch_url = body_raw
+                # Match URL + optional short trailing text (e.g. email signature like "Sara")
+                url_sig_match = re.match(r'^(https?://\S+)(?:\s+.{1,80})?$', body_raw, re.DOTALL)
+                if url_sig_match:
+                    fetch_url = url_sig_match.group(1)
                     body = f'[{subject}]({fetch_url})'
                 else:
                     body = autolink_urls(body)
