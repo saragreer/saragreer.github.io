@@ -16,7 +16,7 @@ from datetime import datetime
 import html2text
 import sys
 import trafilatura
-import google.generativeai as genai
+from google import genai
 
 # Configuration from environment variables
 GMAIL_USER = os.environ.get('GMAIL_USER')
@@ -138,8 +138,7 @@ def enhance_with_ai(subject, body_text, fetch_url=None):
         return [], None
 
     try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        client = genai.Client(api_key=GEMINI_API_KEY)
 
         page_content = None
         if fetch_url:
@@ -173,7 +172,10 @@ Respond ONLY with valid JSON, no other text:
 
 Rules for tags: 2-4 tags, lowercase, hyphenated if multi-word (e.g. "machine-learning", "open-source"). Pick the most specific relevant categories."""
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=prompt
+        )
         raw = response.text.strip()
 
         # Strip markdown code fences if present

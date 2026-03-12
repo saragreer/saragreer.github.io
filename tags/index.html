@@ -1,0 +1,23 @@
+---
+layout: default
+title: Tags
+permalink: /tags/
+---
+
+<div class="home">
+  <h1 class="page-heading">Tags</h1>
+
+  {% if site.tags.size > 0 %}
+    <ul class="tag-index-list">
+      {% assign sorted_tags = site.tags | sort %}
+      {% for tag in sorted_tags %}
+        <li>
+          <a href="/tags/{{ tag[0] | slugify }}/" class="tag-pill">{{ tag[0] }}</a>
+          <span class="post-meta">({{ tag[1] | size }})</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No tags yet.</p>
+  {% endif %}
+</div>
