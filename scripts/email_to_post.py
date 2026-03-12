@@ -173,7 +173,7 @@ Respond ONLY with valid JSON, no other text:
 Rules for tags: 2-4 tags, lowercase, hyphenated if multi-word (e.g. "machine-learning", "open-source"). Pick the most specific relevant categories."""
 
         response = client.models.generate_content(
-            model='gemini-2.0-flash',
+            model='gemini-1.5-flash',
             contents=prompt
         )
         raw = response.text.strip()
