@@ -60,6 +60,21 @@ def decode_email_header(header):
     return ''.join(header_parts)
 
 
+def strip_email_signature(text):
+    """Remove email signature from body text."""
+    # Standard -- separator
+    text = re.split(r'\n--[ \t]*\n', text, maxsplit=1)[0]
+    # Strip trailing empty lines and single sign-off words (e.g. "Sara", "Thanks,")
+    lines = text.strip().splitlines()
+    while lines:
+        last = lines[-1].strip()
+        if not last or re.match(r'^[A-Z]\w*[,.]?$', last):
+            lines.pop()
+        else:
+            break
+    return '\n'.join(lines).strip()
+
+
 def autolink_urls(text):
     """Convert bare URLs to Markdown links, skipping ones already in link syntax."""
     pattern = r'(?<!\()(?<!\[)(https?://[^\s\)<>\[\]]+)'
@@ -336,14 +351,13 @@ def process_emails():
                     print(f"Skipping email with empty body: {subject}")
                     continue
 
-                # Feature 1: Detect single-URL body → use subject as link text
+                # Strip email signature, then detect link-only posts
+                body = strip_email_signature(body)
                 body_raw = body.strip()
                 fetch_url = None
 
-                # Match URL + optional short trailing text (e.g. email signature like "Sara")
-                url_sig_match = re.match(r'^(https?://\S+)(?:\s+.{1,80})?$', body_raw, re.DOTALL)
-                if url_sig_match:
-                    fetch_url = url_sig_match.group(1)
+                if re.match(r'^https?://\S+$', body_raw):
+                    fetch_url = body_raw
                     body = f'[{subject}]({fetch_url})'
                 else:
                     body = autolink_urls(body)
