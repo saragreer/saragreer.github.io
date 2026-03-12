@@ -100,3 +100,36 @@ img {
 .post-list li:last-child {
   border-bottom: none;
 }
+
+/* Tag pills */
+.tag-pill {
+  display: inline-block;
+  background: #f0f4f8;
+  color: #004080;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 3px;
+  text-decoration: none;
+  margin-right: 4px;
+  border: 1px solid #c8d8e8;
+}
+
+.tag-pill:hover,
+.tag-pill:focus {
+  background: #dce8f4;
+  color: #003060;
+  text-decoration: none;
+}
+
+.post-tags {
+  margin: 0.25rem 0 0.5rem;
+}
+
+.tag-index-list {
+  list-style: none;
+  padding: 0;
+}
+
+.tag-index-list li {
+  margin-bottom: 0.5rem;
+}

@@ -33,6 +33,7 @@ jobs:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           ALLOWED_SENDERS: ${{ secrets.ALLOWED_SENDERS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python scripts/email_to_post.py
 
@@ -40,7 +41,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add _posts/
+          git add _posts/ tags/
           if git diff --staged --quiet; then
             echo "No new posts to commit"
           else
