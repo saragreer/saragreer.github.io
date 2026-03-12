@@ -252,7 +252,7 @@ def create_jekyll_post(subject, body, date, tags=None, ai_summary=None):
     # Append AI summary below the body if present
     full_body = body.strip()
     if ai_summary:
-        full_body += f'\n\n*{ai_summary.strip()}*'
+        full_body = f'*{ai_summary.strip()}*\n\n{full_body}'
 
     post_content = f"""---
 layout: post
