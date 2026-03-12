@@ -6,6 +6,7 @@ Connects to Gmail via IMAP, fetches unread emails, and creates Jekyll posts
 
 import imaplib
 import email
+import email.utils
 from email.header import decode_header
 import os
 import re
@@ -55,6 +56,13 @@ def decode_email_header(header):
     return ''.join(header_parts)
 
 
+def autolink_urls(text):
+    """Convert bare URLs to Markdown links, skipping ones already in link syntax."""
+    # Don't match URLs preceded by ( or [ (already inside a Markdown link)
+    pattern = r'(?<!\()(?<!\[)(https?://[^\s\)<>\[\]]+)'
+    return re.sub(pattern, r'[\1](\1)', text)
+
+
 def extract_email_body(msg):
     """Extract the body content from an email message"""
     body = ""
@@ -102,7 +110,7 @@ def extract_email_body(msg):
         except:
             body = ""
 
-    return body.strip()
+    return autolink_urls(body.strip())
 
 
 def create_jekyll_post(subject, body, date):
@@ -248,8 +256,12 @@ def process_emails():
         mail.close()
         mail.logout()
 
+    except imaplib.IMAP4.error as e:
+        print(f"Gmail authentication failed: {str(e)}")
+        print("Check that GMAIL_APP_PASSWORD is correct and not expired.")
+        sys.exit(1)
     except Exception as e:
-        print(f"Error: {str(e)}")
+        print(f"Unexpected error: {type(e).__name__}: {str(e)}")
         sys.exit(1)
 
 
