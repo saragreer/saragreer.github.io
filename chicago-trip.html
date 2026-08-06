@@ -200,6 +200,7 @@
   }
   .badge.reserve{background:#FBE3DC;color:var(--brick-dark);}
   .badge.free{background:#E1EEE9;color:#215047;}
+  .badge.confirmed{background:#DCEAF0;color:var(--focus);}
 
   #map-container{
     height:380px;
@@ -358,10 +359,10 @@
       <h2>Reserve in advance</h2>
       <ul class="check">
         <li>Pequod's Pizza — Thu 8:45 PM (confirmed)</li>
-        <li>Chicago Architecture Center river cruise — Fri 11:00 AM (confirmed)</li>
-        <li>Beatrix River North — Fri dinner, via OpenTable</li>
-        <li>Foo Fighters, Soldier Field — Sat, doors 5:30 PM (confirmed)</li>
-        <li>Field Museum — buy timed-entry tickets online ahead for Sunday morning</li>
+        <li>Chicago Architecture Center river cruise — Fri 11:00 AM (tickets purchased)</li>
+        <li>Beatrix River North — Fri dinner (reserved)</li>
+        <li>Foo Fighters, Soldier Field — Sat, doors 5:30 PM (tickets purchased)</li>
+        <li>Field Museum — Sunday morning (tickets purchased)</li>
         <li>Miller's Pub — Sun dinner, call ahead: 134 S Wabash</li>
       </ul>
     </section>
@@ -407,7 +408,7 @@ const DATA = {
       {time:"6:15 PM", title:"Uber to Lincoln Park", place:"South Pond, near the zoo's east side", note:"", lat:41.9214,lng:-87.6367},
       {time:"6:30–7:15 PM", title:"South Pond &amp; Lily Pool", place:"Alfred Caldwell Lily Pool", note:"Free, quiet prairie-style garden most tourists miss.", badge:"free", lat:41.9268,lng:-87.6367},
       {time:"7:15–8:15 PM", title:"Browse Armitage/Halsted", place:"Boutique strip near Pequod's", note:"Easy walking after the flight.", lat:41.9180,lng:-87.6488},
-      {time:"8:45 PM", title:"Dinner: Pequod's Pizza", place:"2207 N Clybourn Ave · (773) 327-1512", note:"Deep dish, caramelized crust.", badge:"reserve", lat:41.9219,lng:-87.6644}
+      {time:"8:45 PM", title:"Dinner: Pequod's Pizza", place:"2207 N Clybourn Ave · (773) 327-1512", note:"Deep dish, caramelized crust.", badge:"confirmed", lat:41.9219,lng:-87.6644}
     ]
   },
   fri:{
@@ -418,11 +419,11 @@ const DATA = {
       {time:"9:30 AM", title:"Untitled by Picasso", place:"Daley Plaza", note:"Quick photo stop.", lat:41.8843,lng:-87.6298},
       {time:"9:50 AM", title:"Chicago Cultural Center", place:"78 E Washington St", note:"Free, open daily 10–5. Preston Bradley Hall's Tiffany Dome — largest in the world.", badge:"free", lat:41.8836,lng:-87.6255},
       {time:"10:35 AM", title:"Millennium Park &amp; Cloud Gate", place:"Walk over from Cultural Center", note:"", lat:41.8827,lng:-87.6233},
-      {time:"11:00 AM", title:"Architecture river cruise", place:"Dock at Michigan Ave Bridge", note:"~1.5 hrs, confirmed.", badge:"reserve", lat:41.8888,lng:-87.6247},
+      {time:"11:00 AM", title:"Architecture river cruise", place:"Dock at Michigan Ave Bridge", note:"~1.5 hrs, tickets purchased.", badge:"confirmed", lat:41.8888,lng:-87.6247},
       {time:"12:45 PM", title:"Tribune Tower &amp; Wrigley Building", place:"Near the dock", note:"", lat:41.8900,lng:-87.6247},
       {time:"1:15 PM", title:"Lunch: Portillo's &amp; Barnelli's", place:"100 W Ontario St", note:"Italian beef.", lat:41.8934,lng:-87.6314},
       {time:"2:15 PM", title:"River North wander", place:"Chicago Architecture Center storefront, The Green Door Tavern (1872 building)", note:"", lat:41.8945,lng:-87.6376},
-      {time:"6:30 PM", title:"Dinner: Beatrix River North", place:"519 N Clark St", note:"Reserve via OpenTable.", badge:"reserve", lat:41.8909,lng:-87.6309}
+      {time:"6:30 PM", title:"Dinner: Beatrix River North", place:"519 N Clark St", note:"Reservation confirmed.", badge:"confirmed", lat:41.8909,lng:-87.6309}
     ]
   },
   sat:{
@@ -433,13 +434,13 @@ const DATA = {
       {time:"12:30 PM", title:"Back to hotel", place:"Hyatt Place", note:"Light lunch nearby or room service.", lat:41.8836,lng:-87.6353},
       {time:"1:00–4:00 PM", title:"Rest / nap / shower", place:"Hotel", note:"No plans — recharge for the show.", lat:41.8836,lng:-87.6353},
       {time:"4:15 PM", title:"Uber to Soldier Field", place:"", note:"", lat:41.8623,lng:-87.6167},
-      {time:"5:30 PM", title:"Doors: Foo Fighters", place:"Soldier Field", note:"With QOTSA and Mannequin Pussy.", badge:"reserve", lat:41.8623,lng:-87.6167}
+      {time:"5:30 PM", title:"Doors: Foo Fighters", place:"Soldier Field", note:"With QOTSA and Mannequin Pussy. Tickets purchased.", badge:"confirmed", lat:41.8623,lng:-87.6167}
     ]
   },
   sun:{
     center:[41.8680,-87.6400], zoom:12,
     items:[
-      {time:"9:00 AM", title:"Field Museum", place:"1400 S Lake Shore Dr", note:"SUE the T. rex. Buy timed tickets in advance. ~2–2.5 hrs.", badge:"reserve", lat:41.8663,lng:-87.6169},
+      {time:"9:00 AM", title:"Field Museum", place:"1400 S Lake Shore Dr", note:"SUE the T. rex. Timed tickets purchased. ~2–2.5 hrs.", badge:"confirmed", lat:41.8663,lng:-87.6169},
       {time:"11:30 AM", title:"Uber to Pilsen", place:"~15 min", note:"", lat:41.8579,lng:-87.6668},
       {time:"12:00 PM", title:"Lunch: Birrieria Zaragoza / El Tragón", place:"1622 W 18th St / 1560 W 18th St", note:"Both 4.7★, a few blocks apart — do both if hungry.", lat:41.8579,lng:-87.6668},
       {time:"1:30 PM", title:"Pilsen mural walk", place:"18th Street", note:"Optional: Cafe Tola for coffee/pan dulce.", lat:41.8579,lng:-87.6740},
@@ -470,6 +471,7 @@ function renderSchedule(dayKey){
       ${it.note?`<div class="note">${it.note}</div>`:''}
       ${it.badge==='reserve'?'<span class="badge reserve">Reserve ahead</span>':''}
       ${it.badge==='free'?'<span class="badge free">Free, walk-in</span>':''}
+      ${it.badge==='confirmed'?'<span class="badge confirmed">Confirmed</span>':''}
     </div>`;
     ol.appendChild(li);
   });
