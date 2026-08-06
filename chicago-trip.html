@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chicago Trip — Aug 6–10, 2026</title>
+<style>
+  :root{
+    --cream:#F3ECDD;
+    --paper:#FBF7EE;
+    --ink:#2A2420;
+    --ink-soft:#5B5148;
+    --brick:#A03E2C;
+    --brick-dark:#7E2F21;
+    --lake:#2F6B72;
+    --gold:#B8862F;
+    --line:#DED2B8;
+    --focus:#1B5FAE;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.45;
+    -webkit-text-size-adjust:100%;
+  }
+  h1,h2,h3{
+    font-family:Georgia,"Times New Roman",serif;
+    font-weight:700;
+    margin:0 0 4px 0;
+    letter-spacing:0.2px;
+  }
+  a{color:var(--lake);}
+  button{font-family:inherit;}
+  :focus-visible{outline:3px solid var(--focus); outline-offset:2px;}
+
+  header.top{
+    background:linear-gradient(135deg,var(--brick) 0%,var(--brick-dark) 100%);
+    color:#FFF8EF;
+    padding:22px 16px 16px;
+    position:sticky;
+    top:0;
+    z-index:30;
+    box-shadow:0 3px 10px rgba(0,0,0,0.18);
+  }
+  header.top .eyebrow{
+    text-transform:uppercase;
+    font-size:11px;
+    letter-spacing:1.5px;
+    opacity:0.85;
+    font-weight:600;
+  }
+  header.top h1{
+    font-size:22px;
+    color:#FFF8EF;
+    margin-top:2px;
+  }
+  header.top .sub{
+    font-size:13px;
+    opacity:0.9;
+    margin-top:2px;
+  }
+
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:6px;
+    padding:12px 16px 0;
+    scrollbar-width:none;
+  }
+  nav.tabs::-webkit-scrollbar{display:none;}
+  nav.tabs button{
+    flex:0 0 auto;
+    background:rgba(255,255,255,0.14);
+    color:#FFF8EF;
+    border:1px solid rgba(255,255,255,0.35);
+    border-bottom:none;
+    padding:9px 14px;
+    border-radius:10px 10px 0 0;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  nav.tabs button[aria-selected="true"]{
+    background:var(--paper);
+    color:var(--brick-dark);
+    border-color:var(--paper);
+  }
+
+  main{
+    max-width:640px;
+    margin:0 auto;
+    padding:16px;
+  }
+
+  .day-panel{display:none;}
+  .day-panel.active{display:block;}
+
+  .day-head{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .day-head h2{font-size:19px;color:var(--brick-dark);}
+  .day-head .date{font-size:12.5px;color:var(--ink-soft);}
+  .weather-chip{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:6px 12px;
+    font-size:12.5px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+
+  .view-toggle{
+    display:flex;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .view-toggle button{
+    flex:1;
+    background:#FFF;
+    border:1.5px solid var(--brick);
+    color:var(--brick-dark);
+    padding:9px 10px;
+    border-radius:9px;
+    font-weight:700;
+    font-size:13.5px;
+    cursor:pointer;
+  }
+  .view-toggle button[aria-pressed="true"]{
+    background:var(--brick);
+    color:#FFF8EF;
+  }
+
+  .schedule-view, .map-view{display:none;}
+  .schedule-view.active, .map-view.active{display:block;}
+
+  ol.timeline{
+    list-style:none;
+    margin:0;
+    padding:0;
+    border-left:2px solid var(--line);
+    margin-left:8px;
+  }
+  ol.timeline li{
+    position:relative;
+    padding:0 0 18px 20px;
+  }
+  ol.timeline li::before{
+    content:attr(data-num);
+    position:absolute;
+    left:-13px;
+    top:0;
+    width:24px;
+    height:24px;
+    background:var(--gold);
+    color:#2A2420;
+    font-size:12px;
+    font-weight:800;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:2px solid var(--paper);
+  }
+  .item{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px 12px;
+  }
+  .item .time{
+    font-size:12px;
+    font-weight:700;
+    color:var(--lake);
+    text-transform:uppercase;
+    letter-spacing:0.4px;
+  }
+  .item h3{font-size:15.5px;margin-top:2px;}
+  .item .place{font-size:12.5px;color:var(--ink-soft);margin-top:1px;}
+  .item .note{font-size:13px;margin-top:5px;color:var(--ink);}
+  .badge{
+    display:inline-block;
+    margin-top:6px;
+    font-size:11px;
+    font-weight:700;
+    padding:3px 8px;
+    border-radius:999px;
+  }
+  .badge.reserve{background:#FBE3DC;color:var(--brick-dark);}
+  .badge.free{background:#E1EEE9;color:#215047;}
+
+  #map-container{
+    height:380px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    overflow:hidden;
+  }
+  .map-note{font-size:12px;color:var(--ink-soft);margin-top:8px;}
+
+  section.info-block{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:12px;
+  }
+  section.info-block h2{font-size:17px;color:var(--brick-dark);margin-bottom:8px;}
+  table.simple{width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.simple th, table.simple td{
+    text-align:left;
+    padding:6px 4px;
+    border-bottom:1px solid var(--line);
+  }
+  table.simple th{color:var(--ink-soft);font-size:12px;text-transform:uppercase;letter-spacing:0.3px;}
+  ul.check{list-style:none;margin:0;padding:0;}
+  ul.check li{
+    padding:8px 0;
+    border-bottom:1px solid var(--line);
+    font-size:13.5px;
+    display:flex;
+    gap:8px;
+  }
+  ul.check li:last-child{border-bottom:none;}
+  ul.check li::before{content:"☐";color:var(--brick);font-size:15px;line-height:1.3;}
+
+  footer{
+    text-align:center;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    padding:20px 16px 40px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{scroll-behavior:auto !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="eyebrow">Chicago · Thu Aug 6 – Mon Aug 10, 2026</div>
+  <h1>Sara's Chicago Weekend</h1>
+  <div class="sub">Hyatt Place Chicago/Downtown–The Loop · Foo Fighters at Soldier Field, Sat 5:30 PM</div>
+  <nav class="tabs" role="tablist" aria-label="Select day">
+    <button role="tab" id="tab-thu" aria-selected="true" aria-controls="panel-thu">Thu</button>
+    <button role="tab" id="tab-fri" aria-selected="false" aria-controls="panel-fri">Fri</button>
+    <button role="tab" id="tab-sat" aria-selected="false" aria-controls="panel-sat">Sat</button>
+    <button role="tab" id="tab-sun" aria-selected="false" aria-controls="panel-sun">Sun</button>
+    <button role="tab" id="tab-mon" aria-selected="false" aria-controls="panel-mon">Mon</button>
+    <button role="tab" id="tab-info" aria-selected="false" aria-controls="panel-info">Info</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- THURSDAY -->
+  <section class="day-panel active" id="panel-thu" role="tabpanel" aria-labelledby="tab-thu" data-day="thu">
+    <div class="day-head">
+      <div><h2>Thursday</h2><div class="date">August 6 — Arrival</div></div>
+      <div class="weather-chip">77° / 71° · 45% rain</div>
+    </div>
+    <div class="view-toggle">
+      <button class="btn-schedule" aria-pressed="true">Schedule</button>
+      <button class="btn-map" aria-pressed="false">Map</button>
+    </div>
+    <div class="schedule-view active"></div>
+    <div class="map-view"><div id="map-thu" style="height:380px;border-radius:12px;border:1px solid var(--line);"></div>
+      <p class="map-note">Map needs an internet connection to load. Use the Schedule tab if you're offline.</p></div>
+  </section>
+
+  <!-- FRIDAY -->
+  <section class="day-panel" id="panel-fri" role="tabpanel" aria-labelledby="tab-fri" data-day="fri">
+    <div class="day-head">
+      <div><h2>Friday</h2><div class="date">August 7 — Loop &amp; River North</div></div>
+      <div class="weather-chip">86° / 72° · 20% rain</div>
+    </div>
+    <div class="view-toggle">
+      <button class="btn-schedule" aria-pressed="true">Schedule</button>
+      <button class="btn-map" aria-pressed="false">Map</button>
+    </div>
+    <div class="schedule-view active"></div>
+    <div class="map-view"><div id="map-fri" style="height:380px;border-radius:12px;border:1px solid var(--line);"></div>
+      <p class="map-note">Map needs an internet connection to load. Use the Schedule tab if you're offline.</p></div>
+  </section>
+
+  <!-- SATURDAY -->
+  <section class="day-panel" id="panel-sat" role="tabpanel" aria-labelledby="tab-sat" data-day="sat">
+    <div class="day-head">
+      <div><h2>Saturday</h2><div class="date">August 8 — Easy morning, concert night</div></div>
+      <div class="weather-chip">81° / 68° · 20% rain</div>
+    </div>
+    <div class="view-toggle">
+      <button class="btn-schedule" aria-pressed="true">Schedule</button>
+      <button class="btn-map" aria-pressed="false">Map</button>
+    </div>
+    <div class="schedule-view active"></div>
+    <div class="map-view"><div id="map-sat" style="height:380px;border-radius:12px;border:1px solid var(--line);"></div>
+      <p class="map-note">Map needs an internet connection to load. Use the Schedule tab if you're offline.</p></div>
+  </section>
+
+  <!-- SUNDAY -->
+  <section class="day-panel" id="panel-sun" role="tabpanel" aria-labelledby="tab-sun" data-day="sun">
+    <div class="day-head">
+      <div><h2>Sunday</h2><div class="date">August 9 — Museum Campus &amp; Pilsen</div></div>
+      <div class="weather-chip">79° / 69° · 65% rain</div>
+    </div>
+    <div class="view-toggle">
+      <button class="btn-schedule" aria-pressed="true">Schedule</button>
+      <button class="btn-map" aria-pressed="false">Map</button>
+    </div>
+    <div class="schedule-view active"></div>
+    <div class="map-view"><div id="map-sun" style="height:380px;border-radius:12px;border:1px solid var(--line);"></div>
+      <p class="map-note">Map needs an internet connection to load. Use the Schedule tab if you're offline.</p></div>
+  </section>
+
+  <!-- MONDAY -->
+  <section class="day-panel" id="panel-mon" role="tabpanel" aria-labelledby="tab-mon" data-day="mon">
+    <div class="day-head">
+      <div><h2>Monday</h2><div class="date">August 10 — Departure</div></div>
+      <div class="weather-chip">82° / 70° · 20% rain</div>
+    </div>
+    <div class="view-toggle">
+      <button class="btn-schedule" aria-pressed="true">Schedule</button>
+      <button class="btn-map" aria-pressed="false">Map</button>
+    </div>
+    <div class="schedule-view active"></div>
+    <div class="map-view"><div id="map-mon" style="height:380px;border-radius:12px;border:1px solid var(--line);"></div>
+      <p class="map-note">Map needs an internet connection to load. Use the Schedule tab if you're offline.</p></div>
+  </section>
+
+  <!-- INFO -->
+  <section class="day-panel" id="panel-info" role="tabpanel" aria-labelledby="tab-info" data-day="info">
+    <section class="info-block">
+      <h2>Weather at a glance</h2>
+      <table class="simple">
+        <tr><th>Day</th><th>High/Low</th><th>Rain</th></tr>
+        <tr><td>Thu Aug 6</td><td>77° / 71°</td><td>45%</td></tr>
+        <tr><td>Fri Aug 7</td><td>86° / 72°</td><td>20%</td></tr>
+        <tr><td>Sat Aug 8</td><td>81° / 68°</td><td>20%</td></tr>
+        <tr><td>Sun Aug 9</td><td>79° / 69°</td><td>65%</td></tr>
+        <tr><td>Mon Aug 10</td><td>82° / 70°</td><td>20%</td></tr>
+      </table>
+    </section>
+
+    <section class="info-block">
+      <h2>Reserve in advance</h2>
+      <ul class="check">
+        <li>Pequod's Pizza — Thu 8:45 PM (confirmed)</li>
+        <li>Chicago Architecture Center river cruise — Fri 11:00 AM (confirmed)</li>
+        <li>Beatrix River North — Fri dinner, via OpenTable</li>
+        <li>Foo Fighters, Soldier Field — Sat, doors 5:30 PM (confirmed)</li>
+        <li>Field Museum — buy timed-entry tickets online ahead for Sunday morning</li>
+        <li>Miller's Pub — Sun dinner, call ahead: 134 S Wabash</li>
+      </ul>
+    </section>
+
+    <section class="info-block">
+      <h2>Key addresses</h2>
+      <table class="simple">
+        <tr><th>Place</th><th>Address</th></tr>
+        <tr><td>Hyatt Place Chicago/Downtown</td><td>28 N Franklin St</td></tr>
+        <tr><td>Pequod's Pizza</td><td>2207 N Clybourn Ave</td></tr>
+        <tr><td>Lou Mitchell's</td><td>565 W Jackson Blvd</td></tr>
+        <tr><td>The Rookery Building</td><td>209 S LaSalle St</td></tr>
+        <tr><td>Chicago Cultural Center</td><td>78 E Washington St</td></tr>
+        <tr><td>Portillo's &amp; Barnelli's</td><td>100 W Ontario St</td></tr>
+        <tr><td>Beatrix River North</td><td>519 N Clark St</td></tr>
+        <tr><td>Field Museum</td><td>1400 S Lake Shore Dr</td></tr>
+        <tr><td>Birrieria Zaragoza</td><td>1622 W 18th St, Pilsen</td></tr>
+        <tr><td>El Tragón Taquería</td><td>1560 W 18th St, Pilsen</td></tr>
+        <tr><td>Miller's Pub</td><td>134 S Wabash Ave</td></tr>
+        <tr><td>Soldier Field</td><td>1410 Museum Campus Dr</td></tr>
+        <tr><td>Midway Airport (MDW)</td><td>5700 S Cicero Ave</td></tr>
+      </table>
+    </section>
+
+    <section class="info-block">
+      <h2>Flight</h2>
+      <p style="font-size:13.5px;">Depart MDW Monday, Aug 10, 10:05 AM. Leave the hotel by ~7:45–8:00 AM.</p>
+    </section>
+  </section>
+
+</main>
+
+<footer>Built for Sara's Chicago trip · Saved for offline use — maps need a connection, schedules don't.</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script>
+const DATA = {
+  thu: {
+    center:[41.9105,-87.6470], zoom:13,
+    items:[
+      {time:"5:00 PM", title:"Land, Uber to hotel", place:"Hyatt Place, 28 N Franklin St", note:"Check in, drop bags.", lat:41.8836,lng:-87.6353},
+      {time:"6:15 PM", title:"Uber to Lincoln Park", place:"South Pond, near the zoo's east side", note:"", lat:41.9214,lng:-87.6367},
+      {time:"6:30–7:15 PM", title:"South Pond &amp; Lily Pool", place:"Alfred Caldwell Lily Pool", note:"Free, quiet prairie-style garden most tourists miss.", badge:"free", lat:41.9268,lng:-87.6367},
+      {time:"7:15–8:15 PM", title:"Browse Armitage/Halsted", place:"Boutique strip near Pequod's", note:"Easy walking after the flight.", lat:41.9180,lng:-87.6488},
+      {time:"8:45 PM", title:"Dinner: Pequod's Pizza", place:"2207 N Clybourn Ave · (773) 327-1512", note:"Deep dish, caramelized crust.", badge:"reserve", lat:41.9219,lng:-87.6644}
+    ]
+  },
+  fri:{
+    center:[41.8865,-87.6300], zoom:14,
+    items:[
+      {time:"8:00 AM", title:"Breakfast: Lou Mitchell's", place:"565 W Jackson Blvd", note:"Chicago breakfast institution.", lat:41.8781,lng:-87.6404},
+      {time:"8:45 AM", title:"The Rookery Building", place:"209 S LaSalle St", note:"Free self-guided lobby — Burnham & Root, 1888, light court redesigned by Frank Lloyd Wright in 1905. Walk right in.", badge:"free", lat:41.8788,lng:-87.6321},
+      {time:"9:30 AM", title:"Untitled by Picasso", place:"Daley Plaza", note:"Quick photo stop.", lat:41.8843,lng:-87.6298},
+      {time:"9:50 AM", title:"Chicago Cultural Center", place:"78 E Washington St", note:"Free, open daily 10–5. Preston Bradley Hall's Tiffany Dome — largest in the world.", badge:"free", lat:41.8836,lng:-87.6255},
+      {time:"10:35 AM", title:"Millennium Park &amp; Cloud Gate", place:"Walk over from Cultural Center", note:"", lat:41.8827,lng:-87.6233},
+      {time:"11:00 AM", title:"Architecture river cruise", place:"Dock at Michigan Ave Bridge", note:"~1.5 hrs, confirmed.", badge:"reserve", lat:41.8888,lng:-87.6247},
+      {time:"12:45 PM", title:"Tribune Tower &amp; Wrigley Building", place:"Near the dock", note:"", lat:41.8900,lng:-87.6247},
+      {time:"1:15 PM", title:"Lunch: Portillo's &amp; Barnelli's", place:"100 W Ontario St", note:"Italian beef.", lat:41.8934,lng:-87.6314},
+      {time:"2:15 PM", title:"River North wander", place:"Chicago Architecture Center storefront, The Green Door Tavern (1872 building)", note:"", lat:41.8945,lng:-87.6376},
+      {time:"6:30 PM", title:"Dinner: Beatrix River North", place:"519 N Clark St", note:"Reserve via OpenTable.", badge:"reserve", lat:41.8909,lng:-87.6309}
+    ]
+  },
+  sat:{
+    center:[41.8790,-87.6250], zoom:13,
+    items:[
+      {time:"9:00 AM", title:"Breakfast: Cafecito", place:"Wabash Ave, Loop", note:"Cuban, close to the hotel.", lat:41.8757,lng:-87.6265},
+      {time:"10:00 AM", title:"Easy Loop stroll", place:"Millennium Park, revisit Cultural Center if you like", note:"Stay close, low-key.", lat:41.8827,lng:-87.6233},
+      {time:"12:30 PM", title:"Back to hotel", place:"Hyatt Place", note:"Light lunch nearby or room service.", lat:41.8836,lng:-87.6353},
+      {time:"1:00–4:00 PM", title:"Rest / nap / shower", place:"Hotel", note:"No plans — recharge for the show.", lat:41.8836,lng:-87.6353},
+      {time:"4:15 PM", title:"Uber to Soldier Field", place:"", note:"", lat:41.8623,lng:-87.6167},
+      {time:"5:30 PM", title:"Doors: Foo Fighters", place:"Soldier Field", note:"With QOTSA and Mannequin Pussy.", badge:"reserve", lat:41.8623,lng:-87.6167}
+    ]
+  },
+  sun:{
+    center:[41.8680,-87.6400], zoom:12,
+    items:[
+      {time:"9:00 AM", title:"Field Museum", place:"1400 S Lake Shore Dr", note:"SUE the T. rex. Buy timed tickets in advance. ~2–2.5 hrs.", badge:"reserve", lat:41.8663,lng:-87.6169},
+      {time:"11:30 AM", title:"Uber to Pilsen", place:"~15 min", note:"", lat:41.8579,lng:-87.6668},
+      {time:"12:00 PM", title:"Lunch: Birrieria Zaragoza / El Tragón", place:"1622 W 18th St / 1560 W 18th St", note:"Both 4.7★, a few blocks apart — do both if hungry.", lat:41.8579,lng:-87.6668},
+      {time:"1:30 PM", title:"Pilsen mural walk", place:"18th Street", note:"Optional: Cafe Tola for coffee/pan dulce.", lat:41.8579,lng:-87.6740},
+      {time:"3:00 PM", title:"Uber back, pack, rest", place:"Hyatt Place", note:"", lat:41.8836,lng:-87.6353},
+      {time:"6:30 PM", title:"Dinner: Miller's Pub", place:"134 S Wabash Ave", note:"Call ahead — popular Sunday night.", badge:"reserve", lat:41.8811,lng:-87.6265}
+    ]
+  },
+  mon:{
+    center:[41.8352,-87.6937], zoom:11,
+    items:[
+      {time:"7:45–8:00 AM", title:"Leave hotel for MDW", place:"Hyatt Place → Midway Airport", note:"", lat:41.8836,lng:-87.6353},
+      {time:"10:05 AM", title:"Depart MDW", place:"5700 S Cicero Ave", note:"Southwest.", lat:41.7868,lng:-87.7522}
+    ]
+  }
+};
+
+function renderSchedule(dayKey){
+  const panel = document.querySelector(`#panel-${dayKey} .schedule-view`);
+  const ol = document.createElement('ol');
+  ol.className='timeline';
+  DATA[dayKey].items.forEach((it,idx)=>{
+    const li = document.createElement('li');
+    li.setAttribute('data-num', idx+1);
+    li.innerHTML = `<div class="item">
+      <div class="time">${it.time}</div>
+      <h3>${it.title}</h3>
+      ${it.place?`<div class="place">${it.place}</div>`:''}
+      ${it.note?`<div class="note">${it.note}</div>`:''}
+      ${it.badge==='reserve'?'<span class="badge reserve">Reserve ahead</span>':''}
+      ${it.badge==='free'?'<span class="badge free">Free, walk-in</span>':''}
+    </div>`;
+    ol.appendChild(li);
+  });
+  panel.appendChild(ol);
+}
+Object.keys(DATA).forEach(renderSchedule);
+
+// Tabs
+const tabs = document.querySelectorAll('nav.tabs button');
+tabs.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    tabs.forEach(b=>b.setAttribute('aria-selected','false'));
+    btn.setAttribute('aria-selected','true');
+    document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+    const key = btn.id.replace('tab-','');
+    const panel = document.getElementById('panel-'+key);
+    panel.classList.add('active');
+    const map = maps[key];
+    if(map){ setTimeout(()=>map.invalidateSize(), 50); }
+  });
+});
+
+// Schedule/Map toggles per day
+document.querySelectorAll('.day-panel').forEach(panel=>{
+  const key = panel.getAttribute('data-day');
+  const schedBtn = panel.querySelector('.btn-schedule');
+  const mapBtn = panel.querySelector('.btn-map');
+  if(!schedBtn) return;
+  schedBtn.addEventListener('click', ()=>{
+    schedBtn.setAttribute('aria-pressed','true');
+    mapBtn.setAttribute('aria-pressed','false');
+    panel.querySelector('.schedule-view').classList.add('active');
+    panel.querySelector('.map-view').classList.remove('active');
+  });
+  mapBtn.addEventListener('click', ()=>{
+    mapBtn.setAttribute('aria-pressed','true');
+    schedBtn.setAttribute('aria-pressed','false');
+    panel.querySelector('.map-view').classList.add('active');
+    panel.querySelector('.schedule-view').classList.remove('active');
+    initMap(key);
+    setTimeout(()=>{ if(maps[key]) maps[key].invalidateSize(); }, 50);
+  });
+});
+
+const maps = {};
+function initMap(key){
+  if(maps[key]) return;
+  try{
+    const d = DATA[key];
+    const map = L.map('map-'+key).setView(d.center, d.zoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      maxZoom:19,
+      attribution:'&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    d.items.forEach((it,idx)=>{
+      const icon = L.divIcon({
+        html:`<div style="background:#B8862F;color:#2A2420;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;border:2px solid #FBF7EE;box-shadow:0 1px 4px rgba(0,0,0,0.3);">${idx+1}</div>`,
+        className:'', iconSize:[24,24], iconAnchor:[12,12]
+      });
+      L.marker([it.lat,it.lng], {icon}).addTo(map).bindPopup(`<strong>${it.title}</strong><br>${it.time}${it.place?'<br>'+it.place:''}`);
+    });
+    maps[key]=map;
+  }catch(e){
+    document.getElementById('map-'+key).innerHTML = '<p style="padding:16px;font-size:13px;">Map couldn\'t load — no internet connection. Use the Schedule tab instead.</p>';
+  }
+}
+</script>
+</body>
+</html>
