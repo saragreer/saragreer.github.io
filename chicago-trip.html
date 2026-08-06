@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chicago Trip — Aug 6–10, 2026</title>
+<title>Chicago Trip</title>
 <style>
   :root{
     --cream:#F3ECDD;
@@ -180,6 +180,43 @@
     border-radius:12px;
     padding:10px 12px;
   }
+
+  ol.timeline li.divider{
+    padding:0 0 14px 20px;
+  }
+  ol.timeline li.divider::before{
+    content:"";
+    width:9px;
+    height:9px;
+    left:-12.5px;
+    top:6px;
+    background:var(--paper);
+    border:2px solid var(--gold);
+    border-radius:50%;
+  }
+  .sun-divider{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:11px;
+    font-weight:700;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    padding-top:2px;
+  }
+  .sun-divider .sun-time{
+    font-weight:600;
+    text-transform:none;
+    letter-spacing:0;
+    white-space:nowrap;
+  }
+  .sun-divider::after{
+    content:"";
+    flex:1 1 auto;
+    height:1px;
+    background:var(--line);
+  }
   .item .time{
     font-size:12px;
     font-weight:700;
@@ -251,7 +288,7 @@
 <body>
 
 <header class="top">
-  <div class="eyebrow">Chicago · Thu Aug 6 – Mon Aug 10, 2026</div>
+  <div class="eyebrow">Chicago · Thursday – Monday</div>
   <h1>Sara's Chicago Weekend</h1>
   <div class="sub">Hyatt Place Chicago/Downtown–The Loop · Foo Fighters at Soldier Field, Sat 5:30 PM</div>
   <nav class="tabs" role="tablist" aria-label="Select day">
@@ -269,7 +306,7 @@
   <!-- THURSDAY -->
   <section class="day-panel active" id="panel-thu" role="tabpanel" aria-labelledby="tab-thu" data-day="thu">
     <div class="day-head">
-      <div><h2>Thursday</h2><div class="date">August 6 — Arrival</div></div>
+      <div><h2>Thursday</h2><div class="date">Arrival</div></div>
       <div class="weather-chip">77° / 71° · 45% rain</div>
     </div>
     <div class="view-toggle">
@@ -284,7 +321,7 @@
   <!-- FRIDAY -->
   <section class="day-panel" id="panel-fri" role="tabpanel" aria-labelledby="tab-fri" data-day="fri">
     <div class="day-head">
-      <div><h2>Friday</h2><div class="date">August 7 — Loop &amp; River North</div></div>
+      <div><h2>Friday</h2><div class="date">Loop &amp; River North</div></div>
       <div class="weather-chip">86° / 72° · 20% rain</div>
     </div>
     <div class="view-toggle">
@@ -299,7 +336,7 @@
   <!-- SATURDAY -->
   <section class="day-panel" id="panel-sat" role="tabpanel" aria-labelledby="tab-sat" data-day="sat">
     <div class="day-head">
-      <div><h2>Saturday</h2><div class="date">August 8 — Easy morning, concert night</div></div>
+      <div><h2>Saturday</h2><div class="date">Easy morning, concert night</div></div>
       <div class="weather-chip">81° / 68° · 20% rain</div>
     </div>
     <div class="view-toggle">
@@ -314,7 +351,7 @@
   <!-- SUNDAY -->
   <section class="day-panel" id="panel-sun" role="tabpanel" aria-labelledby="tab-sun" data-day="sun">
     <div class="day-head">
-      <div><h2>Sunday</h2><div class="date">August 9 — Museum Campus &amp; Pilsen</div></div>
+      <div><h2>Sunday</h2><div class="date">Museum Campus &amp; Pilsen</div></div>
       <div class="weather-chip">79° / 69° · 65% rain</div>
     </div>
     <div class="view-toggle">
@@ -329,7 +366,7 @@
   <!-- MONDAY -->
   <section class="day-panel" id="panel-mon" role="tabpanel" aria-labelledby="tab-mon" data-day="mon">
     <div class="day-head">
-      <div><h2>Monday</h2><div class="date">August 10 — Departure</div></div>
+      <div><h2>Monday</h2><div class="date">Departure</div></div>
       <div class="weather-chip">82° / 70° · 20% rain</div>
     </div>
     <div class="view-toggle">
@@ -347,11 +384,11 @@
       <h2>Weather at a glance</h2>
       <table class="simple">
         <tr><th>Day</th><th>High/Low</th><th>Rain</th></tr>
-        <tr><td>Thu Aug 6</td><td>77° / 71°</td><td>45%</td></tr>
-        <tr><td>Fri Aug 7</td><td>86° / 72°</td><td>20%</td></tr>
-        <tr><td>Sat Aug 8</td><td>81° / 68°</td><td>20%</td></tr>
-        <tr><td>Sun Aug 9</td><td>79° / 69°</td><td>65%</td></tr>
-        <tr><td>Mon Aug 10</td><td>82° / 70°</td><td>20%</td></tr>
+        <tr><td>Thursday</td><td>77° / 71°</td><td>45%</td></tr>
+        <tr><td>Friday</td><td>86° / 72°</td><td>20%</td></tr>
+        <tr><td>Saturday</td><td>81° / 68°</td><td>20%</td></tr>
+        <tr><td>Sunday</td><td>79° / 69°</td><td>65%</td></tr>
+        <tr><td>Monday</td><td>82° / 70°</td><td>20%</td></tr>
       </table>
     </section>
 
@@ -389,7 +426,7 @@
 
     <section class="info-block">
       <h2>Flight</h2>
-      <p style="font-size:13.5px;">Depart MDW Monday, Aug 10, 10:05 AM. Leave the hotel by ~7:45–8:00 AM.</p>
+      <p style="font-size:13.5px;">Depart MDW Monday, 10:05 AM. Leave the hotel by ~7:45–8:00 AM.</p>
     </section>
   </section>
 
@@ -403,6 +440,7 @@
 const DATA = {
   thu: {
     center:[41.9105,-87.6470], zoom:13,
+    solar:{sunrise:"5:50 AM", sunset:"8:03 PM", sunsetAfter:3},
     items:[
       {time:"5:00 PM", title:"Land, Uber to hotel", place:"Hyatt Place, 28 N Franklin St", note:"Check in, drop bags.", lat:41.8836,lng:-87.6353},
       {time:"6:15 PM", title:"Uber to Lincoln Park", place:"South Pond, near the zoo's east side", note:"", lat:41.9214,lng:-87.6367},
@@ -413,6 +451,7 @@ const DATA = {
   },
   fri:{
     center:[41.8865,-87.6300], zoom:14,
+    solar:{sunrise:"5:51 AM", sunset:"8:02 PM", sunsetAfter:9},
     items:[
       {time:"8:00 AM", title:"Breakfast: Lou Mitchell's", place:"565 W Jackson Blvd", note:"Chicago breakfast institution.", lat:41.8781,lng:-87.6404},
       {time:"8:45 AM", title:"The Rookery Building", place:"209 S LaSalle St", note:"Free self-guided lobby — Burnham & Root, 1888, light court redesigned by Frank Lloyd Wright in 1905. Walk right in.", badge:"free", lat:41.8788,lng:-87.6321},
@@ -428,6 +467,7 @@ const DATA = {
   },
   sat:{
     center:[41.8790,-87.6250], zoom:13,
+    solar:{sunrise:"5:52 AM", sunset:"8:01 PM", sunsetAfter:5},
     items:[
       {time:"9:00 AM", title:"Breakfast: Cafecito", place:"Wabash Ave, Loop", note:"Cuban, close to the hotel.", lat:41.8757,lng:-87.6265},
       {time:"10:00 AM", title:"Easy Loop stroll", place:"Millennium Park, revisit Cultural Center if you like", note:"Stay close, low-key.", lat:41.8827,lng:-87.6233},
@@ -439,6 +479,7 @@ const DATA = {
   },
   sun:{
     center:[41.8680,-87.6400], zoom:12,
+    solar:{sunrise:"5:53 AM", sunset:"7:59 PM", sunsetAfter:5},
     items:[
       {time:"9:00 AM", title:"Field Museum", place:"1400 S Lake Shore Dr", note:"SUE the T. rex. Timed tickets purchased. ~2–2.5 hrs.", badge:"confirmed", lat:41.8663,lng:-87.6169},
       {time:"11:30 AM", title:"Uber to Pilsen", place:"~15 min", note:"", lat:41.8579,lng:-87.6668},
@@ -450,6 +491,7 @@ const DATA = {
   },
   mon:{
     center:[41.8352,-87.6937], zoom:11,
+    solar:{sunrise:"5:54 AM", sunset:"7:58 PM", sunsetAfter:1},
     items:[
       {time:"7:45–8:00 AM", title:"Leave hotel for MDW", place:"Hyatt Place → Midway Airport", note:"", lat:41.8836,lng:-87.6353},
       {time:"10:05 AM", title:"Depart MDW", place:"5700 S Cicero Ave", note:"Southwest.", lat:41.7868,lng:-87.7522}
@@ -457,10 +499,19 @@ const DATA = {
   }
 };
 
+function addDivider(ol, label, time){
+  const li = document.createElement('li');
+  li.className = 'divider';
+  li.innerHTML = `<div class="sun-divider"><span class="sun-label">${label}</span><span class="sun-time">${time}</span></div>`;
+  ol.appendChild(li);
+}
+
 function renderSchedule(dayKey){
   const panel = document.querySelector(`#panel-${dayKey} .schedule-view`);
   const ol = document.createElement('ol');
   ol.className='timeline';
+  const solar = DATA[dayKey].solar;
+  if(solar) addDivider(ol, 'Sunrise', solar.sunrise);
   DATA[dayKey].items.forEach((it,idx)=>{
     const li = document.createElement('li');
     li.setAttribute('data-num', idx+1);
@@ -474,6 +525,7 @@ function renderSchedule(dayKey){
       ${it.badge==='confirmed'?'<span class="badge confirmed">Confirmed</span>':''}
     </div>`;
     ol.appendChild(li);
+    if(solar && idx === solar.sunsetAfter) addDivider(ol, 'Sunset', solar.sunset);
   });
   panel.appendChild(ol);
 }
