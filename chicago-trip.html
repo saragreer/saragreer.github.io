@@ -395,8 +395,8 @@
     <section class="info-block">
       <h2>Reserve in advance</h2>
       <ul class="check">
-        <li>Pequod's Pizza — Thu 8:45 PM (confirmed)</li>
-        <li>Chicago Architecture Center river cruise — Fri 11:00 AM (tickets purchased)</li>
+        <li>Pequod's Pizza — Thu 8:20 PM (confirmed)</li>
+        <li>Chicago Architecture Center river cruise — Fri 10:30 AM (tickets purchased)</li>
         <li>Beatrix River North — Fri dinner (reserved)</li>
         <li>Foo Fighters, Soldier Field — Sat, doors 5:30 PM (tickets purchased)</li>
         <li>Field Museum — Sunday morning (tickets purchased)</li>
@@ -439,14 +439,15 @@
 <script>
 const DATA = {
   thu: {
-    center:[41.9105,-87.6470], zoom:13,
-    solar:{sunrise:"5:50 AM", sunset:"8:03 PM", sunsetAfter:3},
+    center:[41.9219,-87.6644], zoom:14,
+    solar:{sunrise:"5:50 AM", sunset:"8:03 PM", sunsetAfter:2},
     items:[
       {time:"5:00 PM", title:"Land, Uber to hotel", place:"Hyatt Place, 28 N Franklin St", note:"Check in, drop bags.", lat:41.8836,lng:-87.6353},
-      {time:"6:15 PM", title:"Uber to Lincoln Park", place:"South Pond, near the zoo's east side", note:"", lat:41.9214,lng:-87.6367},
-      {time:"6:30–7:15 PM", title:"South Pond &amp; Lily Pool", place:"Alfred Caldwell Lily Pool", note:"Free, quiet prairie-style garden most tourists miss.", badge:"free", lat:41.9268,lng:-87.6367},
-      {time:"7:15–8:15 PM", title:"Browse Armitage/Halsted", place:"Boutique strip near Pequod's", note:"Easy walking after the flight.", lat:41.9180,lng:-87.6488},
-      {time:"8:45 PM", title:"Dinner: Pequod's Pizza", place:"2207 N Clybourn Ave · (773) 327-1512", note:"Deep dish, caramelized crust.", badge:"confirmed", lat:41.9219,lng:-87.6644}
+      {time:"6:39 PM", title:"Lyft to Kibbitznest Books", place:"2212 N Clybourn Ave", note:"Books, brews, and blarney.", lat:41.9218,lng:-87.6641},
+      {time:"7:15 PM", title:"Beer &amp; wings at Beck's", place:"Across the street from Kibbitznest", note:"", lat:41.9218,lng:-87.6643},
+      {time:"8:20 PM", title:"Dinner: Pequod's Pizza", place:"2207 N Clybourn Ave · (773) 327-1512", note:"Sausage, pepperoni, and garlic pizza — the server complimented the order.", lat:41.9219,lng:-87.6644},
+      {time:"9:30 PM", title:"Jewel-Osco run", place:"N Clybourn Ave", note:"Walked it off, grabbed Cokes and Death Metal tea for the hotel room.", lat:41.9203,lng:-87.6612},
+      {time:"10:15 PM", title:"Back to the hotel", place:"Hyatt Place, 28 N Franklin St", note:"", lat:41.8836,lng:-87.6353}
     ]
   },
   fri:{
@@ -455,13 +456,13 @@ const DATA = {
     items:[
       {time:"8:00 AM", title:"Breakfast: Lou Mitchell's", place:"565 W Jackson Blvd", note:"Chicago breakfast institution.", lat:41.8781,lng:-87.6404},
       {time:"8:45 AM", title:"The Rookery Building", place:"209 S LaSalle St", note:"Free self-guided lobby — Burnham & Root, 1888, light court redesigned by Frank Lloyd Wright in 1905. Walk right in.", badge:"free", lat:41.8788,lng:-87.6321},
-      {time:"9:30 AM", title:"Untitled by Picasso", place:"Daley Plaza", note:"Quick photo stop.", lat:41.8843,lng:-87.6298},
-      {time:"9:50 AM", title:"Chicago Cultural Center", place:"78 E Washington St", note:"Free, open daily 10–5. Preston Bradley Hall's Tiffany Dome — largest in the world.", badge:"free", lat:41.8836,lng:-87.6255},
-      {time:"10:35 AM", title:"Millennium Park &amp; Cloud Gate", place:"Walk over from Cultural Center", note:"", lat:41.8827,lng:-87.6233},
-      {time:"11:00 AM", title:"Architecture river cruise", place:"Dock at Michigan Ave Bridge", note:"~1.5 hrs, tickets purchased.", badge:"confirmed", lat:41.8888,lng:-87.6247},
-      {time:"12:45 PM", title:"Tribune Tower &amp; Wrigley Building", place:"Near the dock", note:"", lat:41.8900,lng:-87.6247},
-      {time:"1:15 PM", title:"Lunch: Portillo's &amp; Barnelli's", place:"100 W Ontario St", note:"Italian beef.", lat:41.8934,lng:-87.6314},
-      {time:"2:15 PM", title:"River North wander", place:"Chicago Architecture Center storefront, The Green Door Tavern (1872 building)", note:"", lat:41.8945,lng:-87.6376},
+      {time:"10:30 AM", title:"Architecture river cruise", place:"112 E Wacker Dr (dock at Michigan Ave Bridge)", note:"Arrive by 10:00 AM to redeem tickets at the dockside box office. ~1.5 hrs, tickets purchased.", badge:"confirmed", lat:41.8888,lng:-87.6247},
+      {time:"12:15 PM", title:"Tribune Tower &amp; Wrigley Building", place:"Near the dock", note:"", lat:41.8900,lng:-87.6247},
+      {time:"1:00 PM", title:"Lunch: Portillo's &amp; Barnelli's", place:"100 W Ontario St", note:"Italian beef.", lat:41.8934,lng:-87.6314},
+      {time:"2:00 PM", title:"Untitled by Picasso", place:"Daley Plaza", note:"Quick photo stop.", lat:41.8843,lng:-87.6298},
+      {time:"2:20 PM", title:"Chicago Cultural Center", place:"78 E Washington St", note:"Free, open daily 10–5. Preston Bradley Hall's Tiffany Dome — largest in the world.", badge:"free", lat:41.8836,lng:-87.6255},
+      {time:"3:00 PM", title:"Millennium Park &amp; Cloud Gate", place:"Walk over from Cultural Center", note:"", lat:41.8827,lng:-87.6233},
+      {time:"3:45 PM", title:"River North wander", place:"Chicago Architecture Center storefront, The Green Door Tavern (1872 building)", note:"", lat:41.8945,lng:-87.6376},
       {time:"6:30 PM", title:"Dinner: Beatrix River North", place:"519 N Clark St", note:"Reservation confirmed.", badge:"confirmed", lat:41.8909,lng:-87.6309}
     ]
   },
